@@ -65,18 +65,16 @@ public class signupActivity extends AppCompatActivity {
                     boolean isInserted = myDb.insertData(name, email, password);
 
                     if (isInserted) {
-                        Toast.makeText(signupActivity.this, "Account Created successfully!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(signupActivity.this, "Registration Step 1 Successful!", Toast.LENGTH_SHORT).show();
 
-                        // Kotu tika his karanawa
-                        etName.setText("");
-                        etEmail.setText("");
-                        etPassword.setText("");
-                        etConfirmPassword.setText("");
+                        // Login ekata yanne nathiwa UserDetailsActivity ekata yanawa
+                        Intent intent = new Intent(signupActivity.this, UserDetailsActivity.class);
 
-                        // Login ekata yanawa
-                        Intent intent = new Intent(signupActivity.this, loginActivity.class);
+                        // Ilagata ena screen ekata oya type karapu email eka pass karanawa (Database update karanna ona nisa)
+                        intent.putExtra("USER_EMAIL", email);
+
                         startActivity(intent);
-                        finish();
+                        finish(); // Sign up screen eka close karanawa
                     } else {
                         Toast.makeText(signupActivity.this, "Error: Data not saved", Toast.LENGTH_SHORT).show();
                     }

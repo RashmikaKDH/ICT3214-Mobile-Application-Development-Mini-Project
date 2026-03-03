@@ -1,5 +1,6 @@
 package com.example.ict3214_mobile_application_development_mini_project;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -54,7 +55,13 @@ public class loginActivity extends AppCompatActivity {
                     if (isValid) {
                         Toast.makeText(loginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
 
-                        // TODO: Methanadi thamai api app eke Home Screen ekata yanna Intent eka liyanne
+                        // DashboardActivity ekata yanawa
+                        Intent intent = new Intent(loginActivity.this, DashboardActivity.class);
+                        // Dashboard ekata email eka pass karanawa
+                        intent.putExtra("LOGGED_IN_EMAIL", email);
+                        startActivity(intent);
+                        finish(); // Login screen eka close karanawa
+
 
                     } else {
                         Toast.makeText(loginActivity.this, "Invalid Email or Password!", Toast.LENGTH_SHORT).show();

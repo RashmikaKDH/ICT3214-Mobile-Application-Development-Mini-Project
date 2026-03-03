@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ICT3214MobileApplicationDevelopmentMiniProject">
         <activity
+            android:name=".DashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UserDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".signupActivity"
             android:exported="false" />
         <activity
