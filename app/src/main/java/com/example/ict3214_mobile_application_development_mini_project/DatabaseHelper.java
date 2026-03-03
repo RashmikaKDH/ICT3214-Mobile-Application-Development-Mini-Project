@@ -18,14 +18,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_3 = "EMAIL";
     public static final String COL_4 = "PASSWORD";
 
+    public static final String COL_5 = "HEIGHT";
+    public static final String COL_6 = "WEIGHT";
+
     public DatabaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, 1);
+        super(context, DATABASE_NAME, null, 2);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Table eka create karana SQL query eka
-        db.execSQL("CREATE TABLE " + TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, NAME TEXT, EMAIL TEXT, PASSWORD TEXT)");
+        db.execSQL("CREATE TABLE " + TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, NAME TEXT, EMAIL TEXT, PASSWORD TEXT, HEIGHT TEXT, WEIGHT TEXT)");
     }
 
     @Override
@@ -34,7 +37,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    // 1. Aluth user kenek save karana method eka (For Sign Up)
+    // Aluth user kenek save karana method eka (For Sign Up)
     public boolean insertData(String name, String email, String password) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -46,7 +49,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result != -1; // -1 awoth save wela na, wena gank nam save wela
     }
 
-    // 2. Email ekai Password ekai harida balana method eka (For Login)
+    // Aluth screen eken ena height ekai weight ekai update karana method eka
+    public boolean updateUserDetails(String email, String height, String weight) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COL_5, height);
+        contentValues.put(COL_6, weight);
+
+        // Email eka samanai nam witharak e userge row eka update karanawa
+        int result = db.update(TABLE_NAME, contentValues, "EMAIL = ?", new String[]{email});
+        return result > 0;
+    }
+
+    //Email ekai Password ekai harida balana method eka (For Login)
     public boolean checkUser(String email, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE EMAIL = ? AND PASSWORD = ?", new String[]{email, password});
