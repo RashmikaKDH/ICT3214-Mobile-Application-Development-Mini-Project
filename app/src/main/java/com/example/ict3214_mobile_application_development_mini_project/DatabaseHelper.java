@@ -61,6 +61,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result > 0;
     }
 
+    // Dashboard ekata userge wisthara ganna method eka
+    public Cursor getUserDetails(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        // Email eka dunnama NAME, HEIGHT, WEIGHT gannawa
+        return db.rawQuery("SELECT NAME, HEIGHT, WEIGHT FROM " + TABLE_NAME + " WHERE EMAIL = ?", new String[]{email});
+    }
+
     //Email ekai Password ekai harida balana method eka (For Login)
     public boolean checkUser(String email, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
