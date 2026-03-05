@@ -25,7 +25,7 @@
             android:layout_height="48dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="15dp"
+            android:layout_marginRight="20dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:contentDescription="User Profile"
