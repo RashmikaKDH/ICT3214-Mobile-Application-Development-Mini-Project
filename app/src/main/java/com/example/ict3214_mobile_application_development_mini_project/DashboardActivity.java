@@ -3,7 +3,9 @@ package com.example.ict3214_mobile_application_development_mini_project;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
@@ -23,6 +25,7 @@ public class DashboardActivity extends AppCompatActivity {
     FloatingActionButton floatingActionButton;
     DatabaseHelper myDb;
     String userEmail;
+    private LinearLayout llActivitiesList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +44,7 @@ public class DashboardActivity extends AppCompatActivity {
         ivUserProfile = findViewById(R.id.ivUserProfile);
         tvCurrentDate = findViewById(R.id.tvCurrentDate);
         floatingActionButton = findViewById(R.id.floatingActionButton);
+        llActivitiesList = findViewById(R.id.llActivitiesList);
 
         // Set current system date
         String currentDate = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(new Date());
@@ -51,6 +55,7 @@ public class DashboardActivity extends AppCompatActivity {
 
         if (userEmail != null) {
             loadUserDataAndCalculateBMI();
+            loadActivitiesForToday();
         } else {
             Toast.makeText(this, "Error loading user data", Toast.LENGTH_SHORT).show();
         }
@@ -98,6 +103,30 @@ public class DashboardActivity extends AppCompatActivity {
                 Toast.makeText(this, "Error calculating BMI. Check profile details.", Toast.LENGTH_SHORT).show();
             }
             res.close();
+        }
+    }
+
+    private void loadActivitiesForToday() {
+        String currentDate = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(new Date());
+        Cursor cursor = myDb.getActivitiesForDate(userEmail, currentDate);
+        llActivitiesList.removeAllViews();
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                String activityName = cursor.getString(cursor.getColumnIndexOrThrow("ACTIVITY_NAME"));
+                String duration = cursor.getString(cursor.getColumnIndexOrThrow("DURATION"));
+                TextView tv = new TextView(this);
+                tv.setText(activityName + " - " + duration);
+                tv.setTextSize(18);
+                tv.setPadding(0, 8, 0, 8);
+                llActivitiesList.addView(tv);
+            } while (cursor.moveToNext());
+            cursor.close();
+        } else {
+            TextView tv = new TextView(this);
+            tv.setText("No activities for today.");
+            tv.setTextSize(16);
+            tv.setPadding(0, 8, 0, 8);
+            llActivitiesList.addView(tv);
         }
     }
 }

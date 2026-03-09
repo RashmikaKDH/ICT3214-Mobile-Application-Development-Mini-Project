@@ -96,4 +96,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_USERS + " WHERE EMAIL = ? AND PASSWORD = ?", new String[]{email, password});
         return cursor.getCount() > 0;
     }
+
+    // Method to get activities for a user and date
+    public Cursor getActivitiesForDate(String email, String date) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery("SELECT ACTIVITY_NAME, DURATION FROM " + TABLE_ACTIVITIES + " WHERE EMAIL = ? AND DATE = ?", new String[]{email, date});
+    }
 }
