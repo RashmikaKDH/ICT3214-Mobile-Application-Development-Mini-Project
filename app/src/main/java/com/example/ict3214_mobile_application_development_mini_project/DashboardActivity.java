@@ -11,10 +11,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class DashboardActivity extends AppCompatActivity {
 
-    TextView tvWelcomeName, tvBMIValue, tvBMIStatus;
+    TextView tvWelcomeName, tvBMIValue, tvBMIStatus, tvCurrentDate;
     ImageView ivUserProfile;
     DatabaseHelper myDb;
     String userEmail;
@@ -34,6 +37,11 @@ public class DashboardActivity extends AppCompatActivity {
         tvBMIValue = findViewById(R.id.tvBMIValue);
         tvBMIStatus = findViewById(R.id.tvBMIStatus);
         ivUserProfile = findViewById(R.id.ivUserProfile);
+        tvCurrentDate = findViewById(R.id.tvCurrentDate);
+
+        // Set current system date
+        String currentDate = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(new Date());
+        tvCurrentDate.setText(currentDate);
 
         myDb = new DatabaseHelper(this);
         userEmail = getIntent().getStringExtra("LOGGED_IN_EMAIL");
