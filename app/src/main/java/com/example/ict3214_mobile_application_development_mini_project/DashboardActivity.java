@@ -7,13 +7,13 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -24,8 +24,6 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,10 +33,9 @@ import java.util.Map;
 
 public class DashboardActivity extends AppCompatActivity {
 
-    TextView tvWelcomeName, tvBMIValue, tvBMIStatus, tvCurrentDate, tvNoActivities;
+    TextView tvBMIValue, tvBMIStatus, tvCurrentDate, tvNoActivities;
     ImageView ivUserProfile;
-    FloatingActionButton floatingActionButton;
-    Button btnEdit;
+    CardView btnAddActivity, btnEditActivity;
     DatabaseHelper myDb;
     String userEmail;
     private LinearLayout llActivitiesList;
@@ -72,8 +69,8 @@ public class DashboardActivity extends AppCompatActivity {
         ivUserProfile = findViewById(R.id.ivUserProfile);
         tvCurrentDate = findViewById(R.id.tvCurrentDate);
         tvNoActivities = findViewById(R.id.tvNoActivities);
-        floatingActionButton = findViewById(R.id.floatingActionButton);
-        btnEdit = findViewById(R.id.btnDeleteItem);
+        btnAddActivity = findViewById(R.id.btnAddActivity);
+        btnEditActivity = findViewById(R.id.btnEditActivity);
         llActivitiesList = findViewById(R.id.llActivitiesList);
         barChart = findViewById(R.id.barChart);
 
@@ -89,13 +86,13 @@ public class DashboardActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        floatingActionButton.setOnClickListener(v -> {
+        btnAddActivity.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardActivity.this, add_activites.class);
             intent.putExtra("LOGGED_IN_EMAIL", userEmail);
             startActivity(intent);
         });
 
-        btnEdit.setOnClickListener(v -> {
+        btnEditActivity.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardActivity.this, add_activites.class);
             intent.putExtra("LOGGED_IN_EMAIL", userEmail);
             startActivity(intent);
@@ -117,9 +114,8 @@ public class DashboardActivity extends AppCompatActivity {
     private void loadUserDataAndCalculateBMI() {
         Cursor res = myDb.getUserDetails(userEmail);
         if (res != null && res.moveToFirst()) {
-            String name = res.getString(0);
-            String heightStr = res.getString(1);
-            String weightStr = res.getString(2);
+            String heightStr = res.getString(res.getColumnIndexOrThrow("HEIGHT"));
+            String weightStr = res.getString(res.getColumnIndexOrThrow("WEIGHT"));
             try {
                 if (heightStr != null && weightStr != null) {
                     float heightMeters = Float.parseFloat(heightStr) / 100;
@@ -142,7 +138,7 @@ public class DashboardActivity extends AppCompatActivity {
                         }
                     }
                 }
-            } catch (NumberFormatException e) {
+            } catch (Exception e) {
                 tvBMIValue.setText("0.0");
                 tvBMIStatus.setText("Complete Profile");
             }
