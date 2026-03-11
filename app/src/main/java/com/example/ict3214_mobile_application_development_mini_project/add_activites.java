@@ -35,6 +35,7 @@ public class add_activites extends AppCompatActivity {
 
     private TextView tvSystemDate;
     private Button btnAddNow, btnComplete;
+    private ImageButton btnBack;
     private CardView cvActivityInput;
     private Spinner spinnerActivities, spinnerDuration;
     private ImageButton btnConfirmActivity;
@@ -61,6 +62,7 @@ public class add_activites extends AppCompatActivity {
         userEmail = getIntent().getStringExtra("LOGGED_IN_EMAIL");
 
         // Initialize UI components
+        btnBack = findViewById(R.id.btnBack);
         tvSystemDate = findViewById(R.id.tvSystemDate);
         btnAddNow = findViewById(R.id.btnAddNow);
         btnComplete = findViewById(R.id.btnComplete);
@@ -69,6 +71,9 @@ public class add_activites extends AppCompatActivity {
         spinnerDuration = findViewById(R.id.spinnerDuration);
         btnConfirmActivity = findViewById(R.id.btnConfirmActivity);
         llActivitiesList = findViewById(R.id.llActivitiesList);
+
+        // Back Button logic
+        btnBack.setOnClickListener(v -> finish());
 
         // Set initial date
         String currentDate = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(new Date());
