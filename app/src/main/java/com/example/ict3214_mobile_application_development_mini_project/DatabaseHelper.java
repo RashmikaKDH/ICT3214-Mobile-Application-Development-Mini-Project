@@ -100,6 +100,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Method to get activities for a user and date
     public Cursor getActivitiesForDate(String email, String date) {
         SQLiteDatabase db = this.getReadableDatabase();
-        return db.rawQuery("SELECT ACTIVITY_NAME, DURATION FROM " + TABLE_ACTIVITIES + " WHERE EMAIL = ? AND DATE = ?", new String[]{email, date});
+        return db.rawQuery("SELECT ID, ACTIVITY_NAME, DURATION FROM " + TABLE_ACTIVITIES + " WHERE EMAIL = ? AND DATE = ?", new String[]{email, date});
+    }
+
+    // Method to delete an activity by ID
+    public boolean deleteActivity(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_ACTIVITIES, "ID = ?", new String[]{String.valueOf(id)}) > 0;
+    }
+
+    // Method to delete all activities for a user on a specific date (useful for sync/replace)
+    public void deleteActivitiesForDate(String email, String date) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_ACTIVITIES, "EMAIL = ? AND DATE = ?", new String[]{email, date});
     }
 }
