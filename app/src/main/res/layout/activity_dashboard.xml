@@ -76,13 +76,6 @@
             android:layout_marginBottom="18dp">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Welcome back,"
-                android:textColor="#6B7280"
-                android:textSize="15sp" />
-
-            <TextView
                 android:id="@+id/tvWelcomeName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -268,20 +261,23 @@
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="14dp"
-                    android:text="Your recent fitness activities appear here"
-                    android:textColor="#6B7280"
-                    android:textSize="13sp" />
-
                 <LinearLayout
                     android:id="@+id/llActivitiesList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" />
+                    android:orientation="vertical"
+                    android:layout_marginTop="8dp" />
+
+                <TextView
+                    android:id="@+id/tvNoActivities"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="No activities recorded for today."
+                    android:textColor="#6B7280"
+                    android:textSize="14sp"
+                    android:layout_marginTop="8dp"
+                    android:gravity="start"
+                    android:visibility="gone" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -316,6 +312,15 @@
                     android:text="Track your workout consistency"
                     android:textColor="#6B7280"
                     android:textSize="13sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hours"
+                    android:textColor="#6B7280"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="4dp"/>
 
                 <com.github.mikephil.charting.charts.BarChart
                     android:id="@+id/barChart"
