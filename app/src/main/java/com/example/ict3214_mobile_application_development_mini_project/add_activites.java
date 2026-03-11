@@ -16,20 +16,20 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class add_activites extends AppCompatActivity {
 
@@ -42,9 +42,16 @@ public class add_activites extends AppCompatActivity {
     private LinearLayout llActivitiesList;
     private DatabaseHelper db;
     private String userEmail;
-
-    // List to keep track of activities for the current UI session
     private List<ActivityItem> activityList = new ArrayList<>();
+
+    private final String[] ACTIVITIES = {"Walking", "Running", "Cycling", "Push Ups", "Squats", "Weightlifting", "Jumping Jacks", "Bicycle Crunch", "Bicep Curls", "Shoulder Press"};
+    private final int[] ACTIVITY_COLORS = {
+            Color.parseColor("#4ADE80"), Color.parseColor("#F87171"), Color.parseColor("#60A5FA"),
+            Color.parseColor("#A78BFA"), Color.parseColor("#FBBF24"), Color.parseColor("#FB923C"),
+            Color.parseColor("#F472B6"), Color.parseColor("#22D3EE"), Color.parseColor("#2DD4BF"),
+            Color.parseColor("#94A3B8")
+    };
+    private Map<String, Integer> colorMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,10 +65,11 @@ public class add_activites extends AppCompatActivity {
             return insets;
         });
 
+        colorMap = new HashMap<>();
+        for (int i = 0; i < ACTIVITIES.length; i++) colorMap.put(ACTIVITIES[i], ACTIVITY_COLORS[i]);
+
         db = new DatabaseHelper(this);
         userEmail = getIntent().getStringExtra("LOGGED_IN_EMAIL");
-
-        // Initialize UI components
         btnBack = findViewById(R.id.btnBack);
         tvSystemDate = findViewById(R.id.tvSystemDate);
         btnAddNow = findViewById(R.id.btnAddNow);
@@ -72,182 +80,104 @@ public class add_activites extends AppCompatActivity {
         btnConfirmActivity = findViewById(R.id.btnConfirmActivity);
         llActivitiesList = findViewById(R.id.llActivitiesList);
 
-        // Back Button logic
         btnBack.setOnClickListener(v -> finish());
-
-        // Set initial date
         String currentDate = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(new Date());
         tvSystemDate.setText(currentDate);
-
-        // Date Selection
         tvSystemDate.setOnClickListener(v -> showDatePicker());
-
-        // Setup Spinners
         setupSpinners();
-
-        // Load existing activities for the current date
         loadActivitiesFromDB(currentDate);
 
-        // Show input card
         btnAddNow.setOnClickListener(v -> cvActivityInput.setVisibility(View.VISIBLE));
-
-        // Confirm button click
         btnConfirmActivity.setOnClickListener(v -> {
-            String activity = spinnerActivities.getSelectedItem().toString();
-            String duration = spinnerDuration.getSelectedItem().toString();
-            
-            ActivityItem newItem = new ActivityItem(activity, duration);
-            activityList.add(newItem);
+            activityList.add(new ActivityItem(spinnerActivities.getSelectedItem().toString(), spinnerDuration.getSelectedItem().toString()));
             refreshListView();
-            
             cvActivityInput.setVisibility(View.GONE);
-            Toast.makeText(this, "Added to list", Toast.LENGTH_SHORT).show();
         });
 
-        // Save and Finish
         btnComplete.setOnClickListener(v -> {
-            String selectedDate = tvSystemDate.getText().toString();
-            
-            // Delete existing and save new list to ensure sync
-            db.deleteActivitiesForDate(userEmail, selectedDate);
-            for (ActivityItem item : activityList) {
-                db.insertActivity(userEmail, item.activity, item.duration, selectedDate);
-            }
-
-            Toast.makeText(this, "Activities saved successfully!", Toast.LENGTH_SHORT).show();
-            
-            Intent intent = new Intent(add_activites.this, DashboardActivity.class);
-            intent.putExtra("LOGGED_IN_EMAIL", userEmail);
-            startActivity(intent);
+            db.deleteActivitiesForDate(userEmail, tvSystemDate.getText().toString());
+            for (ActivityItem item : activityList) db.insertActivity(userEmail, item.activity, item.duration, tvSystemDate.getText().toString());
             finish();
         });
     }
 
     private void showDatePicker() {
         Calendar cal = Calendar.getInstance();
-        DatePickerDialog dpd = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
-            Calendar selected = Calendar.getInstance();
-            selected.set(year, month, dayOfMonth);
-            String dateStr = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(selected.getTime());
-            tvSystemDate.setText(dateStr);
-            
-            // Reload activities for the new date
-            loadActivitiesFromDB(dateStr);
-        }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
-        dpd.show();
+        new DatePickerDialog(this, (view, year, month, day) -> {
+            Calendar sel = Calendar.getInstance(); sel.set(year, month, day);
+            String d = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(sel.getTime());
+            tvSystemDate.setText(d);
+            loadActivitiesFromDB(d);
+        }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show();
     }
 
     private void setupSpinners() {
-        String[] activities = {"Walking", "Running", "Cycling", "Push Ups", "Squats", "Weightlifting", "Jumping Jacks", "Bicycle Crunch", "Bicep Curls", "Shoulder Press"};
-        ArrayAdapter<String> activityAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, activities);
-        activityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerActivities.setAdapter(activityAdapter);
-
-        String[] durations = {"10 mins", "20 mins", "30 mins", "45 mins", "60 mins", "1.5 hours", "2 hours"};
-        ArrayAdapter<String> durationAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, durations);
-        durationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerDuration.setAdapter(durationAdapter);
+        ArrayAdapter<String> a = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, ACTIVITIES);
+        a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerActivities.setAdapter(a);
+        String[] ds = {"10 mins", "20 mins", "30 mins", "45 mins", "60 mins", "1.5 hours", "2 hours"};
+        ArrayAdapter<String> da = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, ds);
+        da.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerDuration.setAdapter(da);
     }
 
     private void loadActivitiesFromDB(String date) {
         activityList.clear();
-        Cursor cursor = db.getActivitiesForDate(userEmail, date);
-        if (cursor != null && cursor.moveToFirst()) {
+        Cursor c = db.getActivitiesForDate(userEmail, date);
+        if (c != null && c.moveToFirst()) {
             do {
-                String name = cursor.getString(cursor.getColumnIndexOrThrow("ACTIVITY_NAME"));
-                String duration = cursor.getString(cursor.getColumnIndexOrThrow("DURATION"));
-                activityList.add(new ActivityItem(name, duration));
-            } while (cursor.moveToNext());
-            cursor.close();
+                activityList.add(new ActivityItem(c.getString(c.getColumnIndexOrThrow("ACTIVITY_NAME")), c.getString(c.getColumnIndexOrThrow("DURATION"))));
+            } while (c.moveToNext());
+            c.close();
         }
         refreshListView();
     }
 
     private void refreshListView() {
         llActivitiesList.removeAllViews();
-        for (int i = 0; i < activityList.size(); i++) {
-            addActivityCardToUI(activityList.get(i), i);
-        }
+        for (int i = 0; i < activityList.size(); i++) addActivityCardToUI(activityList.get(i), i);
     }
 
     private void addActivityCardToUI(ActivityItem item, int index) {
         CardView card = new CardView(this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        lp.setMargins(0, 0, 0, 16);
+        lp.setMargins(0, 0, 0, 20);
         card.setLayoutParams(lp);
-        card.setRadius(16f);
+        card.setRadius(24f);
         card.setCardElevation(4f);
-        card.setCardBackgroundColor(Color.WHITE);
 
-        LinearLayout layout = new LinearLayout(this);
-        layout.setOrientation(LinearLayout.HORIZONTAL);
-        layout.setPadding(32, 32, 32, 32);
-        layout.setGravity(Gravity.CENTER_VERTICAL);
+        LinearLayout mainLayout = new LinearLayout(this);
+        mainLayout.setOrientation(LinearLayout.HORIZONTAL);
 
-        // Info
-        LinearLayout infoLayout = new LinearLayout(this);
-        infoLayout.setOrientation(LinearLayout.VERTICAL);
-        infoLayout.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        View strip = new View(this);
+        strip.setLayoutParams(new LinearLayout.LayoutParams(16, ViewGroup.LayoutParams.MATCH_PARENT));
+        strip.setBackgroundColor(colorMap.getOrDefault(item.activity, Color.GRAY));
 
-        TextView tvName = new TextView(this);
-        tvName.setText(item.activity);
-        tvName.setTextSize(18);
-        tvName.setTextColor(Color.parseColor("#111827"));
-        tvName.setTypeface(null, Typeface.BOLD);
+        LinearLayout content = new LinearLayout(this);
+        content.setOrientation(LinearLayout.HORIZONTAL);
+        content.setPadding(40, 40, 40, 40);
+        content.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        content.setGravity(Gravity.CENTER_VERTICAL);
 
-        TextView tvDur = new TextView(this);
-        tvDur.setText(item.duration);
-        tvDur.setTextSize(14);
-        tvDur.setTextColor(Color.parseColor("#6B7280"));
+        LinearLayout info = new LinearLayout(this);
+        info.setOrientation(LinearLayout.VERTICAL);
+        info.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
 
-        infoLayout.addView(tvName);
-        infoLayout.addView(tvDur);
+        TextView name = new TextView(this); name.setText(item.activity); name.setTextSize(18); name.setTextColor(Color.BLACK); name.setTypeface(null, Typeface.BOLD);
+        TextView dur = new TextView(this); dur.setText(item.duration); dur.setTextSize(14); dur.setTextColor(Color.GRAY);
+        info.addView(name); info.addView(dur);
 
-        // Actions (Edit/Delete)
-        ImageButton btnEdit = new ImageButton(this);
-        btnEdit.setImageResource(android.R.drawable.ic_menu_edit);
-        btnEdit.setBackgroundColor(Color.TRANSPARENT);
-        btnEdit.setOnClickListener(v -> {
-            // Fill spinners with current item values
-            setSpinnerValue(spinnerActivities, item.activity);
-            setSpinnerValue(spinnerDuration, item.duration);
-            cvActivityInput.setVisibility(View.VISIBLE);
-            // Remove from list so it can be re-added or updated
-            activityList.remove(index);
-            refreshListView();
-        });
+        ImageButton del = new ImageButton(this); del.setImageResource(android.R.drawable.ic_menu_delete); del.setBackgroundColor(Color.TRANSPARENT); del.setColorFilter(Color.RED);
+        del.setOnClickListener(v -> { activityList.remove(index); refreshListView(); });
 
-        ImageButton btnDelete = new ImageButton(this);
-        btnDelete.setImageResource(android.R.drawable.ic_menu_delete);
-        btnDelete.setBackgroundColor(Color.TRANSPARENT);
-        btnDelete.setColorFilter(Color.RED);
-        btnDelete.setOnClickListener(v -> {
-            activityList.remove(index);
-            refreshListView();
-            Toast.makeText(this, "Removed", Toast.LENGTH_SHORT).show();
-        });
-
-        layout.addView(infoLayout);
-        layout.addView(btnEdit);
-        layout.addView(btnDelete);
-        card.addView(layout);
-        
+        content.addView(info); content.addView(del);
+        mainLayout.addView(strip); mainLayout.addView(content);
+        card.addView(mainLayout);
         llActivitiesList.addView(card, 0);
     }
 
-    private void setSpinnerValue(Spinner spinner, String value) {
-        ArrayAdapter adapter = (ArrayAdapter) spinner.getAdapter();
-        int position = adapter.getPosition(value);
-        if (position >= 0) spinner.setSelection(position);
-    }
-
     private static class ActivityItem {
-        String activity;
-        String duration;
-
-        ActivityItem(String activity, String duration) {
-            this.activity = activity;
-            this.duration = duration;
-        }
+        String activity, duration;
+        ActivityItem(String a, String d) { this.activity = a; this.duration = d; }
     }
 }
