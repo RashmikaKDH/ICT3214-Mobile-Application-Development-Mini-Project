@@ -66,7 +66,7 @@
                     android:contentDescription="User Profile"
                     android:padding="24dp"
                     android:src="@drawable/ic_user_profile"
-                    app:tint="#4F46E5" />
+                    app:tint="#2563EB" />
             </androidx.cardview.widget.CardView>
 
             <TextView
@@ -166,18 +166,18 @@
             </LinearLayout>
 
             <!-- Bottom Actions -->
-            <androidx.appcompat.widget.AppCompatButton
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnEditProfile"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:background="@drawable/bg_confirm_button"
-                android:backgroundTint="#2735ED"
-                android:text="Edit Account Details"
+                android:layout_height="56dp"
+                android:layout_marginTop="32dp"
+                android:text="Edit User Profile"
                 android:textAllCaps="false"
-                android:textColor="#FFFFFF"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:backgroundTint="#2563EB"
+                app:cornerRadius="16dp" />
 
             <TextView
                 android:id="@+id/btnLogout"
