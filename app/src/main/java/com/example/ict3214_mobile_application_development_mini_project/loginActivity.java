@@ -6,6 +6,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -17,6 +18,7 @@ import androidx.core.view.WindowInsetsCompat;
 public class loginActivity extends AppCompatActivity {
 
     private EditText etEmail, etPassword;
+    TextView tvGoToSignup;
     private Button btnLoginSubmit;
 
     @Override
@@ -35,6 +37,17 @@ public class loginActivity extends AppCompatActivity {
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         btnLoginSubmit = findViewById(R.id.btnLoginSubmit);
+        tvGoToSignup = findViewById(R.id.tvGoToSignup);
+
+        // Sign up text operation
+        tvGoToSignup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // from loginActivity to SignupActivity
+                Intent intent = new Intent(loginActivity.this, signupActivity.class);
+                startActivity(intent);
+            }
+        });
 
         btnLoginSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,7 +90,10 @@ public class loginActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(loginActivity.this, "Invalid Email or Password!", Toast.LENGTH_SHORT).show();
                 }
+
+
             }
+
         });
     }
 }
