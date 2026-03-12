@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".signupActivity"
     android:gravity="center"
     android:padding="25dp"
-    android:background="#FFFFFF">
+    android:background="#FFFFFF"
+    tools:context=".signupActivity">
 
+    <!-- Logo -->
     <ImageView
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginBottom="20dp"
-        android:src="@drawable/logofitnote" />
+        android:src="@drawable/logofitnote"/>
 
+    <!-- Title -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,53 +31,104 @@
         android:layout_marginBottom="30dp"
         android:textColor="#000000"/>
 
-    <EditText
-        android:id="@+id/etName"
+    <!-- Full Name -->
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:hint="Full Name"
-        android:inputType="textPersonName"
-        android:background="#F0F0F0"
-        android:paddingLeft="15dp"
-        android:layout_marginBottom="15dp"/>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusTopStart="20dp"
+        app:boxCornerRadiusTopEnd="20dp"
+        app:boxCornerRadiusBottomStart="20dp"
+        app:boxCornerRadiusBottomEnd="20dp">
 
-    <EditText
-        android:id="@+id/etSignupEmail"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Full Name"
+            android:inputType="textPersonName"
+            android:textColor="#000000"
+            android:textColorHint="#808080"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Email -->
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:hint="Email Address"
-        android:inputType="textEmailAddress"
-        android:background="#F0F0F0"
-        android:paddingLeft="15dp"
-        android:layout_marginBottom="15dp"/>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusTopStart="20dp"
+        app:boxCornerRadiusTopEnd="20dp"
+        app:boxCornerRadiusBottomStart="20dp"
+        app:boxCornerRadiusBottomEnd="20dp">
 
-    <EditText
-        android:id="@+id/etSignupPassword"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etSignupEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email Address"
+            android:inputType="textEmailAddress"
+            android:textColor="#000000"
+            android:textColorHint="#808080"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Password -->
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:background="#F0F0F0"
-        android:paddingLeft="15dp"
-        android:layout_marginBottom="15dp"/>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        app:endIconMode="password_toggle"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusTopStart="20dp"
+        app:boxCornerRadiusTopEnd="20dp"
+        app:boxCornerRadiusBottomStart="20dp"
+        app:boxCornerRadiusBottomEnd="20dp">
 
-    <EditText
-        android:id="@+id/etConfirmPassword"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etSignupPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:textColor="#000000"
+            android:textColorHint="#808080"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Confirm Password -->
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:hint="Confirm Password"
-        android:inputType="textPassword"
-        android:background="#F0F0F0"
-        android:paddingLeft="15dp"
-        android:layout_marginBottom="30dp"/>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        app:endIconMode="password_toggle"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusTopStart="20dp"
+        app:boxCornerRadiusTopEnd="20dp"
+        app:boxCornerRadiusBottomStart="20dp"
+        app:boxCornerRadiusBottomEnd="20dp">
 
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etConfirmPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Confirm Password"
+            android:inputType="textPassword"
+            android:textColor="#000000"
+            android:textColorHint="#808080"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Register Button -->
     <Button
         android:id="@+id/btnSignupSubmit"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="55dp"
         android:text="Register Now"
-        android:backgroundTint="#4CAF50"
         android:textColor="#FFFFFF"
-        android:textSize="18sp"/>
+        android:textSize="18sp"
+        android:backgroundTint="#4CAF50"/>
 
 </LinearLayout>

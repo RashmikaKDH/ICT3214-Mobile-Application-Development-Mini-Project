@@ -2,8 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
-android:background="#ffffff"> <ImageView
-    android:layout_width="150dp"
-    android:layout_height="150dp"
-    android:src="@drawable/logofitnote"
-    android:layout_centerInParent="true" /> </RelativeLayout>
+android:background="#ffffff">
+
+    <ImageView
+        android:layout_width="142dp"
+        android:layout_height="150dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/logofitnote" /> </RelativeLayout>

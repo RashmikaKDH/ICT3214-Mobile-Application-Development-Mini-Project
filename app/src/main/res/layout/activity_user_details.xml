@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UserDetailsActivity"
     android:orientation="vertical"
     android:gravity="center"
     android:padding="25dp"
-    android:background="#ffffff">
+    android:background="#ffffff"
+    tools:context=".UserDetailsActivity">
 
+    <!-- Title -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -30,33 +32,56 @@
         android:layout_marginBottom="40dp"
         android:textColor="#666666"/>
 
-    <EditText
-        android:id="@+id/etHeight"
+    <!-- Height Field -->
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:hint="Height in cm (e.g. 170)"
-        android:inputType="numberDecimal"
-        android:background="#F0F0F0"
-        android:paddingLeft="15dp"
-        android:layout_marginBottom="15dp"/>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusTopStart="20dp"
+        app:boxCornerRadiusTopEnd="20dp"
+        app:boxCornerRadiusBottomStart="20dp"
+        app:boxCornerRadiusBottomEnd="20dp">
 
-    <EditText
-        android:id="@+id/etWeight"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etHeight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Height in cm (e.g. 170)"
+            android:inputType="numberDecimal"
+            android:textColor="#000000"
+            android:textColorHint="#808080"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Weight Field -->
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:hint="Weight in kg (e.g. 65)"
-        android:inputType="numberDecimal"
-        android:background="#F0F0F0"
-        android:paddingLeft="15dp"
-        android:layout_marginBottom="30dp"/>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusTopStart="20dp"
+        app:boxCornerRadiusTopEnd="20dp"
+        app:boxCornerRadiusBottomStart="20dp"
+        app:boxCornerRadiusBottomEnd="20dp">
 
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etWeight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Weight in kg (e.g. 65)"
+            android:inputType="numberDecimal"
+            android:textColor="#000000"
+            android:textColorHint="#808080"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Complete Button -->
     <Button
         android:id="@+id/btnComplete"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:text="Complete Registration"
-        android:backgroundTint="#4CAF50"
         android:textColor="#FFFFFF"
-        android:textSize="18sp"/>
+        android:textSize="18sp"
+        android:backgroundTint="#4CAF50"/>
 
 </LinearLayout>
