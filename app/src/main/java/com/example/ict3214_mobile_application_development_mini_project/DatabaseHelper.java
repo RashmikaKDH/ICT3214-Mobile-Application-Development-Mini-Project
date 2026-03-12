@@ -8,12 +8,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    // Database ekei, Table ekei nam
+    // Database and Table Constants
     public static final String DATABASE_NAME = "FitnessApp.db";
     public static final String TABLE_USERS = "users";
     public static final String TABLE_ACTIVITIES = "activities";
 
-    // Users Table eke Columns tika
+    // Columns for Users Table
     public static final String COL_USER_ID = "ID";
     public static final String COL_USER_NAME = "NAME";
     public static final String COL_USER_EMAIL = "EMAIL";
@@ -21,7 +21,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_USER_HEIGHT = "HEIGHT";
     public static final String COL_USER_WEIGHT = "WEIGHT";
 
-    // Activities Table eke Columns tika
+    // Columns for Activities Table
     public static final String COL_ACT_ID = "ID";
     public static final String COL_ACT_EMAIL = "EMAIL";
     public static final String COL_ACT_NAME = "ACTIVITY_NAME";
@@ -34,10 +34,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Users Table eka create karana SQL query eka
+
         db.execSQL("CREATE TABLE " + TABLE_USERS + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, NAME TEXT, EMAIL TEXT, PASSWORD TEXT, HEIGHT TEXT, WEIGHT TEXT)");
-        
-        // Activities Table eka create karana SQL query eka
+
         db.execSQL("CREATE TABLE " + TABLE_ACTIVITIES + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, EMAIL TEXT, ACTIVITY_NAME TEXT, DURATION TEXT, DATE TEXT)");
     }
 
@@ -48,7 +47,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    // Aluth user kenek save karana method eka (For Sign Up)
+    // Inserts a new user into the database during Step 1 of Registration.
     public boolean insertData(String name, String email, String password) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -60,7 +59,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
-    // Activity ekak save karana method eka
+    // Inserts a new fitness activity record for a specific user.
     public boolean insertActivity(String email, String activityName, String duration, String date) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -73,7 +72,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
-    // Aluth screen eken ena height ekai weight ekai update karana method eka
+    // Updates the height and weight of an existing user during Step 2 of Registration.
     public boolean updateUserDetails(String email, String height, String weight) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -84,13 +83,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result > 0;
     }
 
-    // Dashboard ekata userge wisthara ganna method eka
+    // Retrieves specific user details (Name, Height, Weight) for the Dashboard.
     public Cursor getUserDetails(String email) {
         SQLiteDatabase db = this.getReadableDatabase();
         return db.rawQuery("SELECT NAME, HEIGHT, WEIGHT FROM " + TABLE_USERS + " WHERE EMAIL = ?", new String[]{email});
     }
 
-    // Email ekai Password ekai harida balana method eka (For Login)
+    // Authenticates a user by checking if the provided email and password exist.
     public boolean checkUser(String email, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_USERS + " WHERE EMAIL = ? AND PASSWORD = ?", new String[]{email, password});

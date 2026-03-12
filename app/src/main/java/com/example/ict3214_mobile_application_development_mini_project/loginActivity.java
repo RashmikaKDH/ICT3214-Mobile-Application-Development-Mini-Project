@@ -2,6 +2,7 @@ package com.example.ict3214_mobile_application_development_mini_project;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,20 +16,22 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class loginActivity extends AppCompatActivity {
 
-    EditText etEmail, etPassword;
-    Button btnLoginSubmit;
+    private EditText etEmail, etPassword;
+    private Button btnLoginSubmit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        //bind views
+
+        // Initialize UI components
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         btnLoginSubmit = findViewById(R.id.btnLoginSubmit);
@@ -36,39 +39,45 @@ public class loginActivity extends AppCompatActivity {
         btnLoginSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Todo: Email/Password validation check add karnna one...
-
-                // Type karala thiyena akuru tika allaganna (String walata ganna)
                 String email = etEmail.getText().toString().trim();
                 String password = etPassword.getText().toString().trim();
 
-                // Email eka hari password eka hari his nam error ekak pennanna
-                if (email.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(loginActivity.this, "Please enter Email and Password", Toast.LENGTH_SHORT).show();
-                } // Dekama gahala nam, database eken balanawa details harida kiyala
-                else {
-                    DatabaseHelper myDb = new DatabaseHelper(loginActivity.this);
+                // 1. Email validation
+                if (email.isEmpty()) {
+                    etEmail.setError("Email is required");
+                    etEmail.requestFocus();
+                    return;
+                }
 
-                    // Email/Password DB eke thiyenawada check karanawa
-                    boolean isValid = myDb.checkUser(email, password);
+                if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    etEmail.setError("Please enter a valid email address");
+                    etEmail.requestFocus();
+                    return;
+                }
 
-                    if (isValid) {
-                        Toast.makeText(loginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
+                // 2. Password validation
+                if (password.isEmpty()) {
+                    etPassword.setError("Password is required");
+                    etPassword.requestFocus();
+                    return;
+                }
 
-                        // DashboardActivity ekata yanawa
-                        Intent intent = new Intent(loginActivity.this, DashboardActivity.class);
-                        // Dashboard ekata email eka pass karanawa
-                        intent.putExtra("LOGGED_IN_EMAIL", email);
-                        startActivity(intent);
-                        finish(); // Login screen eka close karanawa
+                // Authenticate user against database
+                DatabaseHelper myDb = new DatabaseHelper(loginActivity.this);
+                boolean isValid = myDb.checkUser(email, password);
 
+                if (isValid) {
+                    Toast.makeText(loginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
 
-                    } else {
-                        Toast.makeText(loginActivity.this, "Invalid Email or Password!", Toast.LENGTH_SHORT).show();
-                    }
+                    // Proceed to dashboard
+                    Intent intent = new Intent(loginActivity.this, DashboardActivity.class);
+                    intent.putExtra("LOGGED_IN_EMAIL", email);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(loginActivity.this, "Invalid Email or Password!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-
     }
 }
