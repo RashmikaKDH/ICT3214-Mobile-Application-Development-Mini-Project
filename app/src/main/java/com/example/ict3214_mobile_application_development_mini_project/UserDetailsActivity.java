@@ -16,7 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 public class UserDetailsActivity extends AppCompatActivity {
     EditText etHeight, etWeight;
     Button btnComplete;
-    String userEmail; // Kalin screen eken ena email eka daganna variable ekak
+    String userEmail; // Variable to hold the email passed from the previous screen
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +33,10 @@ public class UserDetailsActivity extends AppCompatActivity {
         etWeight = findViewById(R.id.etWeight);
         btnComplete = findViewById(R.id.btnComplete);
 
-        // Kalin screen eken ewapu Email eka allagannawa
+        // Retrieve the user email passed from SignupActivity
         userEmail = getIntent().getStringExtra("USER_EMAIL");
 
+        // Handle complete registration button click event
         btnComplete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -45,19 +46,19 @@ public class UserDetailsActivity extends AppCompatActivity {
                 if (height.isEmpty() || weight.isEmpty()) {
                     Toast.makeText(UserDetailsActivity.this, "Please enter Height and Weight", Toast.LENGTH_SHORT).show();
                 } else {
-                    // Data tika update karanawa
+                    // nitialize DatabaseHelper
                     DatabaseHelper myDb = new DatabaseHelper(UserDetailsActivity.this);
                     boolean isUpdated = myDb.updateUserDetails(userEmail, height, weight);
 
                     if (isUpdated) {
                         Toast.makeText(UserDetailsActivity.this, "Registration Fully Completed!", Toast.LENGTH_LONG).show();
 
-                        // Okkoma iwarai, dan Login ekata yanawa
+                        // Proceed to LoginActivity after successful registration
                         Intent intent = new Intent(UserDetailsActivity.this, loginActivity.class);
                         startActivity(intent);
                         finish();
                     } else {
-                        Toast.makeText(UserDetailsActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(UserDetailsActivity.this, "Database update failed! Please try again.", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
